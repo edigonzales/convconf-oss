@@ -1,0 +1,25 @@
+plugins {
+    id 'application'
+}
+
+dependencies {
+    implementation project(':convconf-core')
+    implementation 'info.picocli:picocli:4.7.6'
+    annotationProcessor 'info.picocli:picocli-codegen:4.7.6'
+
+    testImplementation 'info.picocli:picocli:4.7.6'
+}
+
+application {
+    mainClass = 'guru.interlis.convconf.cli.ConvConfCli'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact(tasks.named('distZip')) {
+                classifier = 'bin'
+            }
+        }
+    }
+}

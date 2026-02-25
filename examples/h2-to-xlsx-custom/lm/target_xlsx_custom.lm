@@ -1,0 +1,42 @@
+LM TargetXlsxCustom;
+VALUEMAP OrgFormMap {
+  5 -> Verein.Domain.Koerperschaft.HandelsGesellschaft.AG;
+  200 -> Verein.Domain.Hochschule;
+}
+VALUEMAP CommentClassMap {
+  1 -> Verein.Domain.Kommentar;
+  2 -> Verein.Domain.OrgKommentar;
+}
+VALUEMAP StructAttrMap {
+  1 -> Verein.Domain.Veranstaltung.DirektKommentare;
+  2 -> Verein.Domain.Veranstaltung.NachKommentare;
+  3 -> Verein.Domain.Veranstaltung.ErfolgsNotiz;
+}
+DATA ORG_EXPORT FROM ORG_EXPORT CLASS Verein.Domain.Organisation {
+  IDENT ORG_ID;
+  COLUMN ORG_ID -> Nummer;
+  COLUMN ORG_LABEL -> Name;
+  COLUMN ORG_FORM_NO -> Form USING OrgFormMap;
+}
+DATA PERSON_EXPORT FROM PERSON_EXPORT CLASS Verein.Domain.Person {
+  IDENT PERSON_ID;
+  COLUMN PERSON_ID -> Nummer;
+  COLUMN PERSON_LAST -> Name;
+  COLUMN PERSON_FIRST -> Vorname;
+  COLUMN ORG_LINK -> Vertretene_Organisation;
+}
+DATA EVENT_EXPORT FROM EVENT_EXPORT CLASS Verein.Domain.Veranstaltung {
+  IDENT EVENT_ID;
+  COLUMN EVENT_ID -> Nummer;
+  COLUMN EVENT_TITLE -> Bezeichnung;
+  COLUMN EVENT_PLACE -> Ort;
+  COLUMN EVENT_DAY -> Datum;
+}
+DATA COMMENT_EXPORT FROM COMMENT_EXPORT CLASS Verein.Domain.OrgKommentar {
+  IDENT COMMENT_ID;
+  COLUMN COMMENT_TEXT -> Text;
+  COLUMN ORG_BY -> DurchOrganisation;
+  COLUMN EVENT_REF -> $PARENT;
+  COLUMN STRUCT_KIND -> $STRUCTATTR USING StructAttrMap;
+  COLUMN CLASS_KIND -> $CLASS USING CommentClassMap;
+}

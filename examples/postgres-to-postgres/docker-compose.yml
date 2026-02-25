@@ -1,0 +1,17 @@
+services:
+  src-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: source
+      POSTGRES_USER: source
+      POSTGRES_DB: source
+    ports:
+      - "55432:5432"
+  tgt-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: target
+      POSTGRES_USER: target
+      POSTGRES_DB: target
+    ports:
+      - "55433:5432"

@@ -1,0 +1,11 @@
+INSERT INTO src_organisation VALUES ('A','Adasys_AG',5);
+INSERT INTO src_organisation VALUES ('heig','HEIG-VD',200);
+INSERT INTO src_person VALUES ('HRG','Gnaegi','Hans_Ruedi',NULL);
+INSERT INTO src_person VALUES ('do','Dorfschmid','Sepp','A');
+INSERT INTO src_person VALUES ('Jens','Ingensand','Jens','heig');
+INSERT INTO src_event VALUES ('GGMM52','Sitzung52','online','2025-10-13');
+INSERT INTO src_comment VALUES ('c1','GGMM52',1,1,'c1',NULL);
+INSERT INTO src_comment VALUES ('c3','GGMM52',1,2,'c3','heig');
+INSERT INTO src_comment VALUES ('c4','GGMM52',2,1,'c4',NULL);
+INSERT INTO src_comment VALUES ('c5','GGMM52',2,2,'c5','heig');
+INSERT INTO src_comment VALUES ('s1','GGMM52',3,1,'Super',NULL);

@@ -1,0 +1,56 @@
+INTERLIS 2.4;
+MODEL Verein (de)
+AT "https://example.org/verein"
+VERSION "2026-02-24" =
+TOPIC Domain =
+  DOMAIN JurPersonArt =
+    (Einzel,
+    EinfacheGesellschaft,
+    Koerperschaft(
+      HandelsGesellschaft(
+        Kollektiv,
+        Kommandit,
+        AG,
+        GmbH,
+        KommanditAG
+      ),
+      Genossenschaft,
+      Verein,
+      Stiftung
+    ),
+    Amt,
+    Hochschule);
+
+  CLASS Mitglied (ABSTRACT) =
+    Nummer: MANDATORY TEXT;
+    Name: MANDATORY TEXT;
+  END Mitglied;
+
+  CLASS Organisation EXTENDS Mitglied =
+    Form : JurPersonArt;
+  END Organisation;
+
+  CLASS Person EXTENDS Mitglied =
+    Vorname: MANDATORY TEXT;
+    Vertretene_Organisation: REFERENCE TO Organisation;
+  END Person;
+
+  STRUCTURE Kommentar =
+    Text: MANDATORY TEXT;
+  END Kommentar;
+
+  STRUCTURE OrgKommentar EXTENDS Kommentar =
+    DurchOrganisation: REFERENCE TO Organisation;
+  END OrgKommentar;
+
+  CLASS Veranstaltung =
+    Nummer: MANDATORY TEXT;
+    Bezeichnung: TEXT;
+    Ort: MANDATORY TEXT;
+    Datum: TEXT;
+    DirektKommentare: BAG {0..*} OF Kommentar;
+    NachKommentare: BAG {0..*} OF Kommentar;
+    ErfolgsNotiz: Kommentar;
+  END Veranstaltung;
+END Domain;
+END Verein.

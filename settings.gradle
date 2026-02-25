@@ -1,0 +1,2 @@
+rootProject.name='convconf-oss'
+include 'convconf-core','convconf-cli'

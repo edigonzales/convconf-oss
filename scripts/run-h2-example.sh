@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+./gradlew -q :convconf-core:classes :convconf-cli:installDist
+H2_JAR=$(find ~/.gradle/caches/modules-2/files-2.1/com.h2database/h2/2.3.232 -name 'h2-2.3.232.jar' | head -n1)
+mkdir -p build
+java -cp "$H2_JAR" org.h2.tools.RunScript -url jdbc:h2:file:./build/source-db -user sa -script examples/h2-to-h2/sql/source-schema.sql
+java -cp "$H2_JAR" org.h2.tools.RunScript -url jdbc:h2:file:./build/source-db -user sa -script examples/h2-to-h2/sql/source-seed.sql
+java -cp "$H2_JAR" org.h2.tools.RunScript -url jdbc:h2:file:./build/target-db -user sa -script examples/h2-to-h2/sql/target-schema.sql
+
+./convconf-cli/build/install/convconf-cli/bin/convconf-cli convert-h2 \
+  --km examples/h2-to-h2/km/verein.ili \
+  --source-lm examples/h2-to-h2/lm/source.lm \
+  --target-lm examples/h2-to-h2/lm/target.lm \
+  --source-jdbc jdbc:h2:file:./build/source-db \
+  --target-jdbc jdbc:h2:file:./build/target-db

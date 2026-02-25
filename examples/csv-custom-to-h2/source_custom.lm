@@ -1,0 +1,42 @@
+LM SourceCustomCsv;
+VALUEMAP OrgFormMap {
+  5 -> Verein.Domain.Koerperschaft.HandelsGesellschaft.AG;
+  200 -> Verein.Domain.Hochschule;
+}
+VALUEMAP CommentClassMap {
+  1 -> Verein.Domain.Kommentar;
+  2 -> Verein.Domain.OrgKommentar;
+}
+VALUEMAP StructAttrMap {
+  1 -> Verein.Domain.Veranstaltung.DirektKommentare;
+  2 -> Verein.Domain.Veranstaltung.NachKommentare;
+  3 -> Verein.Domain.Veranstaltung.ErfolgsNotiz;
+}
+DATA Organisation FROM ORG_SRC CLASS Verein.Domain.Organisation {
+  IDENT OID;
+  COLUMN OID -> Nummer;
+  COLUMN ORG_NAME -> Name;
+  COLUMN FORM_NO -> Form USING OrgFormMap;
+}
+DATA Person FROM PERSON_SRC CLASS Verein.Domain.Person {
+  IDENT PID;
+  COLUMN PID -> Nummer;
+  COLUMN FAMILY -> Name;
+  COLUMN GIVEN -> Vorname;
+  COLUMN ORG_REF -> Vertretene_Organisation;
+}
+DATA Event FROM EVENT_SRC CLASS Verein.Domain.Veranstaltung {
+  IDENT EID;
+  COLUMN EID -> Nummer;
+  COLUMN TITLE_TXT -> Bezeichnung;
+  COLUMN PLACE_TXT -> Ort;
+  COLUMN DAY_TXT -> Datum;
+}
+INSPECTION ALL Comment FROM COMMENT_SRC CLASS Verein.Domain.Kommentar {
+  IDENT CID;
+  PARENT EVT_REF;
+  STRUCTATTR STRUCT_NO USING StructAttrMap;
+  CLASSCOL TYPE_NO USING CommentClassMap;
+  COLUMN TEXT_TXT -> Text;
+  COLUMN ORG_BY -> DurchOrganisation;
+}

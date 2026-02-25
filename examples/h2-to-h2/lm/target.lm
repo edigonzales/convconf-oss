@@ -1,0 +1,42 @@
+LM Target;
+VALUEMAP OrgFormMap {
+  5 -> Verein.Domain.Koerperschaft.HandelsGesellschaft.AG;
+  200 -> Verein.Domain.Hochschule;
+}
+VALUEMAP CommentClassMap {
+  1 -> Verein.Domain.Kommentar;
+  2 -> Verein.Domain.OrgKommentar;
+}
+VALUEMAP StructAttrMap {
+  1 -> Verein.Domain.Veranstaltung.DirektKommentare;
+  2 -> Verein.Domain.Veranstaltung.NachKommentare;
+  3 -> Verein.Domain.Veranstaltung.ErfolgsNotiz;
+}
+DATA ORG_TGT FROM TGT_ORGANISATION CLASS Verein.Domain.Organisation {
+  IDENT ID;
+  COLUMN ID -> Nummer;
+  COLUMN NAME -> Name;
+  COLUMN FORM_CODE -> Form USING OrgFormMap;
+}
+DATA PERSON_TGT FROM TGT_PERSON CLASS Verein.Domain.Person {
+  IDENT ID;
+  COLUMN ID -> Nummer;
+  COLUMN LAST_NAME -> Name;
+  COLUMN FIRST_NAME -> Vorname;
+  COLUMN ORG_ID -> Vertretene_Organisation;
+}
+DATA EVENT_TGT FROM TGT_EVENT CLASS Verein.Domain.Veranstaltung {
+  IDENT ID;
+  COLUMN ID -> Nummer;
+  COLUMN TITLE -> Bezeichnung;
+  COLUMN PLACE -> Ort;
+  COLUMN EVENT_DATE -> Datum;
+}
+DATA COMMENT_TGT FROM TGT_COMMENT CLASS Verein.Domain.OrgKommentar {
+  IDENT COMMENT_ID;
+  COLUMN TEXT_VALUE -> Text;
+  COLUMN BY_ORG -> DurchOrganisation;
+  COLUMN EVENT_ID -> $PARENT;
+  COLUMN STRUCT_CODE -> $STRUCTATTR USING StructAttrMap;
+  COLUMN TYPE_CODE -> $CLASS USING CommentClassMap;
+}
